@@ -8,6 +8,8 @@ import Projects from "./components/Appshell/Projects";
 import MyTasks from "./components/Appshell/MyTasks";
 import ProjectBoard from "./components/Appshell/ProjectBoard";
 import Calender from "./components/Appshell/Calender";
+import Team from "./components/Appshell/Team";
+import Analytics from "./components/Appshell/Analytics";
 
 
 export default function RoutesComponent() {
@@ -24,6 +26,8 @@ export default function RoutesComponent() {
                     <Route path="/projects/:projectId" element={<ProjectBoard />} />
                     <Route path="/tasks" element={<MyTasks />} />
                     <Route path="/calendar" element={<Calender />} />
+                    <Route path="/team" element={<Team />} />
+                    <Route path="/analytics" element={<Analytics />} />
                 </Route>
             </Routes>
         </BrowserRouter>
