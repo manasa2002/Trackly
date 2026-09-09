@@ -8,7 +8,6 @@ import {
     Plus,
     Search,
     Trash2,
-    Users,
     X,
     Pencil,
 } from "lucide-react";
