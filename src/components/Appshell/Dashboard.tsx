@@ -528,7 +528,7 @@ function Dashboard() {
                         <button
                             onClick={() =>
                                 navigate(
-                                    "/my-tasks",
+                                    "/tasks",
                                 )
                             }
                             className="text-xs font-medium text-[#315b5d]"
@@ -552,7 +552,7 @@ function Dashboard() {
                                 description="You're all caught up."
                                 action={() =>
                                     navigate(
-                                        "/my-tasks",
+                                        "/tasks",
                                     )
                                 }
                                 actionLabel="View Tasks"
@@ -714,7 +714,7 @@ function Dashboard() {
 
                     <button
                         onClick={() =>
-                            navigate("/my-tasks")
+                            navigate("/tasks")
                         }
                         className="mt-5 flex items-center gap-2 text-sm font-medium text-white"
                     >
