@@ -1,8 +1,8 @@
+import "dotenv/config";
+
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-
-dotenv.config();
+import { prisma } from "./lib/prisma.js";
 
 const app = express();
 
@@ -14,6 +14,24 @@ app.get("/api/health", (_req, res) => {
         success: true,
         message: "Trackly API is running 🚀",
     });
+});
+
+app.get("/api/users", async (_req, res) => {
+    try {
+        const users = await prisma.users.findMany();
+
+        res.json({
+            success: true,
+            data: users,
+        });
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch users",
+        });
+    }
 });
 
 const PORT = process.env.PORT || 5000;
