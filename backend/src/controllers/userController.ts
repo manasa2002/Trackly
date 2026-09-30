@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { getUsers, createUser as createUserService } from "../services/userService.js";
+import { createUserSchema } from "../validations/userSchema.js";
 
 
 export const getAllUsers = async (req: Request, res: Response) => {
@@ -20,7 +21,17 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
     try {
-        const { name, email, password } = req.body;
+
+        const result = createUserSchema.safeParse(req.body);
+
+        if (!result.success) {
+            return res.status(400).json({
+                success: false,
+                message: "Validation failed",
+                errors: result.error.issues,
+            });
+        }
+        const { name, email, password } = result.data;
         const user = await createUserService(name, email, password);
         res.status(201).json({
             success: true,
