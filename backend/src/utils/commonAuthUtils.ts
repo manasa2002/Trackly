@@ -40,18 +40,17 @@ export const apiService = (
     return finalData;
 };
 
-
 export const successResponse = (
-    res: Response
+    res: Response,
+    message = "Successfully Submitted.",
+    data?: unknown
 ): Response => {
-
-    const finalData: Record<string, unknown> = {};
-
-    finalData.status = true;
-    finalData.scode = "01";
-    finalData.sdesc = "Successfully Submitted.";
-
-    return res.status(200).json(finalData);
+    return res.status(200).json({
+        status: true,
+        scode: "01",
+        sdesc: message,
+        ...(data !== undefined && { data }),
+    });
 };
 
 
@@ -85,14 +84,15 @@ export const failureResponse = (
 
 
 export const unAuthorisedResponse = (
-    res: Response
+    res: Response,
+    message = "Unauthorized request"
 ): Response => {
 
     const finalData: Record<string, unknown> = {};
 
     finalData.status = false;
     finalData.scode = "401";
-    finalData.sdesc = "Unauthorized request";
+    finalData.sdesc = message;
 
     return res.status(401).json(finalData);
 };

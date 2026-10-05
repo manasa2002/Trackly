@@ -1,35 +1,26 @@
 import { Request, Response } from "express";
 import { loginSchema } from "../validations/authSchema.js";
 import { loginUser } from "../services/authService.js";
+import { failureResponse, successResponse, unAuthorisedResponse } from "../utils/commonAuthUtils.js";
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request,
+    res: Response): Promise<Response> => {
     try {
         const result = loginSchema.safeParse(req.body);
 
         if (!result.success) {
-            return res.status(400).json({
-                success: false,
-                message: "Validation failed",
-                errors: result.error.issues,
-            });
+            return failureResponse(res, "validation failed")
         }
 
         const { email, password } = result.data;
 
         const user = await loginUser(email, password);
 
-        return res.status(200).json({
-            success: true,
-            message: "Login Successful",
-            data: user,
-        })
+        return successResponse(res, "Login Successful", user)
     }
     catch (error) {
         console.error("Login error:", error);
 
-        return res.status(401).json({
-            success: false,
-            message: "Invalid email or password",
-        });
-    }
+        return unAuthorisedResponse(res, "Invalid email or password")
+    };
 }
