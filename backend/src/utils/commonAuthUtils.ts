@@ -1,51 +1,54 @@
 import { Response } from "express";
 
+type ApiResponse = {
+    status: boolean;
+    scode: string;
+    sdesc: string;
+    [key: string]: unknown;
+}
+
 export const apiService = (
     apiServiceName: string,
     repoMethod: Record<string, unknown>[]
-): Record<string, unknown> => {
-
-    const finalData: Record<string, unknown> = {};
-
+): ApiResponse => {
     try {
-
         if (repoMethod.length > 0) {
-
-            finalData.status = true;
-            finalData.scode = "01";
-            finalData.sdesc = "Data found";
-            finalData[apiServiceName] = repoMethod;
-            finalData.data_count = repoMethod.length;
-
+            return {
+                status: true,
+                scode: "01",
+                sdesc: "Data found",
+                [apiServiceName]: repoMethod,
+                data_count: repoMethod.length,
+            }
         } else {
-
-            finalData.status = false;
-            finalData.scode = "03";
-            finalData.sdesc = "No data found";
-            finalData[apiServiceName] = "No data found";
-            finalData.data_count = 0;
+            return {
+                status: false,
+                scode: "03",
+                sdesc: "No data found",
+                [apiServiceName]: "No data found",
+                data_count: 0,
+            }
         }
-
     } catch (error) {
 
         console.error("Error in apiService:", error);
-
-        finalData.status = false;
-        finalData.scode = "02";
-        finalData.sdesc = "Internal server issue";
-        finalData[apiServiceName] = "No data found";
-        finalData.data_count = 0;
+        return {
+            status: false,
+            scode: "02",
+            sdesc: "Internal server issue",
+            [apiServiceName]: "No data found",
+            data_count: 0,
+        }
     }
-
-    return finalData;
 };
 
 export const successResponse = (
     res: Response,
     message = "Successfully Submitted.",
-    data?: unknown
+    data?: unknown,
+    status = 200
 ): Response => {
-    return res.status(200).json({
+    return res.status(status).json({
         status: true,
         scode: "01",
         sdesc: message,
@@ -56,30 +59,24 @@ export const successResponse = (
 
 export const failureResponse = (
     res: Response,
-    errorMessage: string
+    errorMessage?: string,
+    status = 500
 ): Response => {
 
-    const finalData: Record<string, unknown> = {};
+    if (!errorMessage || errorMessage.trim() === "" || errorMessage === "02") {
 
-    finalData.status = false;
-
-    if (
-        errorMessage === "02" ||
-        errorMessage.trim() === ""
-    ) {
-
-        finalData.scode = "02";
-        finalData.sdesc =
-            "Failed Due To: Internal Server Issue";
-
-    } else {
-
-        finalData.scode = "03";
-        finalData.sdesc =
-            `Failed Due To: ${errorMessage}`;
+        return res.status(status).json({
+            status: false,
+            scode: "02",
+            sdesc: "Failed Due To: Internal Server Issue",
+        });
     }
 
-    return res.status(200).json(finalData);
+    return res.status(status).json({
+        status: false,
+        scode: "03",
+        sdesc: `Failed Due To: ${errorMessage}`,
+    });
 };
 
 

@@ -1,17 +1,21 @@
 import "dotenv/config";
-
 import express from "express";
 import cors from "cors";
+
 import { prisma } from "./lib/prisma.js";
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js"
 import projectRoutes from "./routes/projectRoutes.js";
+import { errorMiddleware } from "./middleware/errorMiddleware.js";
+
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes)
+
+app.use(errorMiddleware)
 
 app.get("/api/health", (_req, res) => {
     res.json({

@@ -23,11 +23,12 @@ export const authMiddleware = (req: Request, res: Response,
         const token = authHeader.split(" ")[1];
 
         if (!token) {
-            unAuthorisedResponse(res, "Invalid authorization header")
+            unAuthorisedResponse(res, "Invalid authorization header");
+            return;
         }
 
-        const decoded = jwt.verify(token, JWT_SECRET) as TokenPayload;
-        req.user = decoded;
+        const decoded = jwt.verify(token, JWT_SECRET) as { payload: TokenPayload };
+        req.user = decoded.payload;
 
         next();
 
