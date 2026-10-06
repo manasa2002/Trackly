@@ -7,3 +7,7 @@ export const createProjectSchema = z.object({
     description: z.string()
         .max(500, "Description can't exceed 500 characters").trim().optional()
 })
+
+export const addProjectMemberSchema = z.object({
+    userId: z.number().int().positive("User ID must be a positive number"),
+});
